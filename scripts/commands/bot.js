@@ -113,36 +113,7 @@ const cuteReplies = [
   "তুই আমার জন্য সবচেয়ে special 🥰",
   "তোর হাসি মানেই আমার পৃথিবী 🌎"
 ];
-module.exports.run = async ({ api, event, args }) => {
-  const { threadID, messageID, senderID } = event;
-  const query = args.join(" ");
-
-  if (!query) {
-    const reply = cuteReplies[Math.floor(Math.random() * cuteReplies.length)];
-    return api.getUserInfo(senderID, (err, result) => {
-      if (err) return console.error(err);
-
-      const userName = result[senderID].name;
-
-      api.sendMessage({
-        body: `${userName}, ${reply}`,
-        mentions: [{ tag: userName, id: senderID }]
-      }, threadID, (err, info) => {
-        if (err) return;
-        global.client.handleReply.push({
-          name: this.config.name,
-          messageID: info.messageID,
-          author: senderID
-        });
-      }, messageID);
-    });
-  }
-
-  try {
-    const response = await axios.get(`https://www.noobs-api.rf.gd/dipto/baby?text=${encodeURIComponent(query)}&senderID=100075122837809&font=1`);
-    const reply = response.data.reply || "I didn't get that. Try asking something else!";
-
-    api.sendMessage(reply, threadID, (err, info) => {
+api.sendMessage(reply, threadID, (err, info) => {
       if (err) return;
       global.client.handleReply.push({
         name: this.config.name,
@@ -152,7 +123,7 @@ module.exports.run = async ({ api, event, args }) => {
     }, messageID);
   } catch (error) {
     console.error("API Error:", error.message);
-    api.sendMessage("Something went wrong while contacting the bot service.", threadID, messageID);
+    api.sendMessage("জানু, সার্ভারে একটু সমস্যা হচ্ছে 😢", threadID, messageID);
   }
 };
 
@@ -161,7 +132,7 @@ module.exports.handleReply = async ({ api, event }) => {
 
   try {
     const response = await axios.get(`https://www.noobs-api.rf.gd/dipto/baby?text=${encodeURIComponent(body)}&senderID=100075122837809&font=1`);
-    const reply = response.data.reply || "I didn't get that. Try asking something else!";
+    const reply = response.data.reply || "জানু, আবার বলো তো 🥺";
 
     api.sendMessage(reply, threadID, (err, info) => {
       if (err) return;
@@ -173,7 +144,7 @@ module.exports.handleReply = async ({ api, event }) => {
     }, messageID);
   } catch (error) {
     console.error("API Error:", error.message);
-    api.sendMessage("Something went wrong while contacting the bot service.", threadID, messageID);
+    api.sendMessage("জানু, সার্ভারে একটু সমস্যা হচ্ছে 😢", threadID, messageID);
   }
 };
 
@@ -183,8 +154,3 @@ module.exports.handleReaction = async ({ api, event }) => {
   if (reaction === '😡') {
     try {
       await api.unsendMessage(messageReply.messageID);
-    } catch (err) {
-      console.error("Failed to unsend message:", err.message);
-    }
-  }
-};
